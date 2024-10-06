@@ -10,26 +10,66 @@ public class RobotController : MonoBehaviour
 
     public float motorForce = 1500f;
     public float brakeForce = 3000f;
-    public float maxSteerAngle = 30f;
+    public float downforce = 500f;
 
     private float motorInput;
     private float steerInput;
-    private float brakeInput;
+    private bool isTurning;
+
+    private Vector2 moveMag;
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     private void Update()
     {
         motorInput = Input.GetAxis("Vertical");
         steerInput = Input.GetAxis("Horizontal");
-        brakeInput = Input.GetKey(KeyCode.Space) ? 1f : 0f;
 
-        HandleMotor();
-        ApplyBraking();
+        if (Mathf.Abs(steerInput) > 0.1f && !isTurning)
+        {
+            ApplyBraking();
+            isTurning = true;
+        }
+        else if (Mathf.Abs(steerInput) <= 0.1f)
+        {
+            isTurning = false;
+        }
+
+        if (!isTurning)
+        {
+            moveMag = new Vector2(motorInput, steerInput).normalized;
+            if (moveMag.magnitude > 0.1f)
+            {
+                HandleMotor();
+            }
+            else
+            {
+                ApplyBraking();
+            }
+        }
+        else
+        {
+            HandleTurning();
+        }
+
+    }
+
+    private void FixedUpdate()
+    {
+        rb.AddForce(-transform.up * downforce, ForceMode.Acceleration);
     }
 
     private void HandleMotor()
     {
-        float leftMotor = motorInput * motorForce + steerInput * motorForce;
-        float rightMotor = motorInput * motorForce - steerInput * motorForce;
+        leftWheel.brakeTorque = 0;
+        rightWheel.brakeTorque = 0;
+
+        float leftMotor = motorInput * motorForce;
+        float rightMotor = motorInput * motorForce;
 
         leftWheel.motorTorque = leftMotor;
         rightWheel.motorTorque = rightMotor;
@@ -37,15 +77,21 @@ public class RobotController : MonoBehaviour
 
     private void ApplyBraking()
     {
-        if (brakeInput > 0f)
-        {
-            leftWheel.brakeTorque = brakeInput * brakeForce;
-            rightWheel.brakeTorque = brakeInput * brakeForce;
-        }
-        else
-        {
-            leftWheel.brakeTorque = 0f;
-            rightWheel.brakeTorque = 0f;
-        }
+        leftWheel.brakeTorque = brakeForce;
+        rightWheel.brakeTorque = brakeForce;
+        leftWheel.motorTorque = 0;
+        rightWheel.motorTorque = 0;
+    }
+
+    private void HandleTurning()
+    {
+        float leftMotor = steerInput * motorForce;
+        float rightMotor = -steerInput * motorForce;
+
+        leftWheel.motorTorque = leftMotor;
+        rightWheel.motorTorque = rightMotor;
+
+        leftWheel.brakeTorque = 0;
+        rightWheel.brakeTorque = 0;
     }
 }
