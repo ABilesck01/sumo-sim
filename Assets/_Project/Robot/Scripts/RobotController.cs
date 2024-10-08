@@ -85,8 +85,8 @@ public class RobotController : MonoBehaviour
 
     private void HandleTurning()
     {
-        float leftMotor = steerInput * motorForce;
-        float rightMotor = -steerInput * motorForce;
+        float leftMotor = steerInput * (motorForce /2);
+        float rightMotor = -steerInput * (motorForce / 2);
 
         leftWheel.motorTorque = leftMotor;
         rightWheel.motorTorque = rightMotor;
