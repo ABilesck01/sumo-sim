@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class RobotController : MonoBehaviour
 {
-    public WheelCollider leftWheel;
-    public WheelCollider rightWheel;
+    public WheelCollider[] leftWheel;
+    public WheelCollider[] rightWheel;
+    public Transform centerOfMass;
 
     public float motorForce = 1500f;
     public float brakeForce = 3000f;
@@ -17,17 +19,31 @@ public class RobotController : MonoBehaviour
     private bool isTurning;
 
     private Vector2 moveMag;
+    private Vector2 move;
     private Rigidbody rb;
+
+    public void GetMoveInput(InputAction.CallbackContext callbackContext)
+    {
+        move = callbackContext.ReadValue<Vector2>();
+        steerInput = move.x;
+        motorInput = move.y;
+    }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
 
+    private void Start()
+    {
+        if(centerOfMass != null)
+            rb.centerOfMass = centerOfMass.position;
+    }
+
     private void Update()
     {
-        motorInput = Input.GetAxis("Vertical");
-        steerInput = Input.GetAxis("Horizontal");
+        //motorInput = Input.GetAxis("Vertical");
+        //steerInput = Input.GetAxis("Horizontal");
 
         if (Mathf.Abs(steerInput) > 0.1f && !isTurning)
         {
@@ -58,40 +74,65 @@ public class RobotController : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
-    {
-        rb.AddForce(-transform.up * downforce, ForceMode.Acceleration);
-    }
-
     private void HandleMotor()
     {
-        leftWheel.brakeTorque = 0;
-        rightWheel.brakeTorque = 0;
+        for (int i = 0; i < leftWheel.Length; i++)
+        {
+            leftWheel[i].brakeTorque = 0;
+        }
+        for (int i = 0; i < rightWheel.Length; i++)
+        {
+            rightWheel[i].brakeTorque = 0;
+        }
 
         float leftMotor = motorInput * motorForce;
         float rightMotor = motorInput * motorForce;
 
-        leftWheel.motorTorque = leftMotor;
-        rightWheel.motorTorque = rightMotor;
+        for (int i = 0; i < leftWheel.Length; i++)
+        {
+            leftWheel[i].motorTorque = leftMotor;
+        }
+        for (int i = 0; i < rightWheel.Length; i++)
+        {
+            rightWheel[i].motorTorque = rightMotor;
+        }
     }
 
     private void ApplyBraking()
     {
-        leftWheel.brakeTorque = brakeForce;
-        rightWheel.brakeTorque = brakeForce;
-        leftWheel.motorTorque = 0;
-        rightWheel.motorTorque = 0;
+        for (int i = 0; i < leftWheel.Length; i++)
+        {
+            leftWheel[i].brakeTorque = brakeForce;
+            leftWheel[i].motorTorque = 0;
+        }
+        for (int i = 0; i < rightWheel.Length; i++)
+        {
+            rightWheel[i].brakeTorque = brakeForce;
+            rightWheel[i].motorTorque = 0;
+        }
     }
 
     private void HandleTurning()
     {
-        float leftMotor = steerInput * (motorForce /2);
-        float rightMotor = -steerInput * (motorForce / 2);
+        for (int i = 0; i < leftWheel.Length; i++)
+        {
+            leftWheel[i].brakeTorque = 0;
+        }
+        for (int i = 0; i < rightWheel.Length; i++)
+        {
+            rightWheel[i].brakeTorque = 0;
+        }
 
-        leftWheel.motorTorque = leftMotor;
-        rightWheel.motorTorque = rightMotor;
+        float leftMotor = steerInput * motorForce;
+        float rightMotor = -steerInput * motorForce;
 
-        leftWheel.brakeTorque = 0;
-        rightWheel.brakeTorque = 0;
+        for (int i = 0; i < leftWheel.Length; i++)
+        {
+            leftWheel[i].motorTorque = leftMotor;
+        }
+        for (int i = 0; i < rightWheel.Length; i++)
+        {
+            rightWheel[i].motorTorque = rightMotor;
+        }
     }
 }
