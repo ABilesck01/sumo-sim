@@ -800,8 +800,8 @@ MonoBehaviour:
   - {fileID: 8195486337467998036}
   - {fileID: 8424247537384179357}
   centerOfMass: {fileID: 0}
-  motorForce: 10000
-  brakeForce: 40000
+  motorForce: 30000
+  brakeForce: 90000
   downforce: 5
 --- !u!114 &1409994136961404812
 MonoBehaviour:
