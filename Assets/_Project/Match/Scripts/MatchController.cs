@@ -4,12 +4,17 @@ using UnityEngine.InputSystem;
 
 public class MatchController : MonoBehaviour
 {
-    private GameObject player1;
-    private GameObject player2;
+    public Transform player1StartPosition;
+    public Transform player2StartPosition;
+
+    private PlayerController player1;
+    private PlayerController player2;
     private bool player1Ready = false;
     private bool player2Ready = false;
 
     private bool gameStarted = false;
+
+    public static Action OnBothPlayersReady;
 
     private void OnEnable()
     {
@@ -38,19 +43,24 @@ public class MatchController : MonoBehaviour
 
     void EnablePositionSelection()
     {
-
+        player1.EnablePositionSelection(-1);
+        player2.EnablePositionSelection(1);
     }
 
     public void OnPlayerJoined(PlayerInput playerInput)
     {
         if (player1 == null)
         {
-            player1 = playerInput.gameObject;
+            player1 = playerInput.gameObject.GetComponent<PlayerController>();
+            player1.transform.position = player1StartPosition.position;
+            player1.EnablePositionSelection(-1);
             Debug.Log("Player 1 joined. Waiting for Player 2...");
         }
         else if (player2 == null)
         {
-            player2 = playerInput.gameObject;
+            player2 = playerInput.gameObject.GetComponent<PlayerController>();
+            player2.transform.position = player2StartPosition.position;
+            player1.EnablePositionSelection(1);
             Debug.Log("Player 2 joined. Waiting for both players to be ready...");
         }
     }
