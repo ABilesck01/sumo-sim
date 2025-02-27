@@ -12,6 +12,7 @@ public abstract class BaseRobotController : MonoBehaviour
 
     protected Rigidbody rb;
     protected bool isGrounded;
+    protected bool isMatchActive = false;
 
     protected virtual void Awake()
     {
@@ -28,6 +29,8 @@ public abstract class BaseRobotController : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        if (!isMatchActive || settings == null) return;
+
         CheckGrounded();
 
         // Aplica gravidade extra
@@ -52,5 +55,10 @@ public abstract class BaseRobotController : MonoBehaviour
     {
         // Raycast do centro do robô para baixo, verificando o chão
         isGrounded = Physics.Raycast(transform.position, -transform.up, settings.groundCheckDistance, groundLayer);
+    }
+
+    public void SetMatchActive(bool active)
+    {
+        isMatchActive = active;
     }
 }
