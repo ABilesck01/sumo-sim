@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class AiRobotController : BaseRobotController
 {
+    [Header("AI Settings")]
     public Transform target;
 
     protected override void MoveRobot()
@@ -12,7 +13,7 @@ public class AiRobotController : BaseRobotController
 
         Vector3 direction = (target.position - transform.position).normalized;
 
-        Vector3 moveForce = direction * speed;
+        Vector3 moveForce = direction * settings.speed;
         rb.velocity = new Vector3(moveForce.x, rb.velocity.y, moveForce.z);
     }
 
@@ -25,6 +26,6 @@ public class AiRobotController : BaseRobotController
         Vector3 direction = (target.position - transform.position).normalized;
 
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        rb.MoveRotation(Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime));
+        rb.MoveRotation(Quaternion.RotateTowards(rb.rotation, targetRotation, settings.rotationSpeed * Time.fixedDeltaTime));
     }
 }

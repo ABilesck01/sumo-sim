@@ -4,13 +4,11 @@ using UnityEngine;
 
 public abstract class BaseRobotController : MonoBehaviour
 {
-    public float speed = 3f;
-    public float rotationSpeed = 100f;
-    public float gravityMultiplier = 50f;
-    public float groundStickForce = 10f;
-    public Transform centerOfMass;
-    public float groundCheckDistance = 0.2f;
-    public LayerMask groundLayer;
+    [Header("Robot Settings")]
+    [SerializeField] protected RobotSettings settings;
+    [Header("Ground Settings")]
+    [SerializeField] protected Transform centerOfMass;
+    [SerializeField] protected LayerMask groundLayer;
 
     protected Rigidbody rb;
     protected bool isGrounded;
@@ -33,10 +31,10 @@ public abstract class BaseRobotController : MonoBehaviour
         CheckGrounded();
 
         // Aplica gravidade extra
-        rb.AddForce(Physics.gravity * gravityMultiplier, ForceMode.Acceleration);
+        rb.AddForce(Physics.gravity * settings.gravityMultiplier, ForceMode.Acceleration);
 
         // Mantém o robô preso ao chão
-        rb.AddForce(-transform.up * groundStickForce, ForceMode.Acceleration);
+        rb.AddForce(-transform.up * settings.groundStickForce, ForceMode.Acceleration);
 
         if (!isGrounded)
         {
@@ -53,6 +51,6 @@ public abstract class BaseRobotController : MonoBehaviour
     protected void CheckGrounded()
     {
         // Raycast do centro do robô para baixo, verificando o chão
-        isGrounded = Physics.Raycast(transform.position, -transform.up, groundCheckDistance, groundLayer);
+        isGrounded = Physics.Raycast(transform.position, -transform.up, settings.groundCheckDistance, groundLayer);
     }
 }

@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 
 public class RobotController : BaseRobotController
 {
-
     private Vector2 move;
 
     public void GetMoveInput(InputAction.CallbackContext callbackContext)
@@ -18,7 +17,7 @@ public class RobotController : BaseRobotController
             return;
         }
 
-        Vector3 moveDirection = transform.forward * move.y * speed;
+        Vector3 moveDirection = transform.forward * move.y * settings.speed;
         rb.velocity = new Vector3(moveDirection.x, rb.velocity.y * 0.1f, moveDirection.z);
     }
 
@@ -29,7 +28,7 @@ public class RobotController : BaseRobotController
             return;
         }
 
-        float rotation = move.x * rotationSpeed * Time.fixedDeltaTime;
+        float rotation = move.x * settings.rotationSpeed * Time.fixedDeltaTime;
         rb.MoveRotation(rb.rotation * Quaternion.Euler(0, rotation, 0));
     }
 }
