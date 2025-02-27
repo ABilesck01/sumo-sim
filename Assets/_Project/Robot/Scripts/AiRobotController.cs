@@ -1,60 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AiRobotController : MonoBehaviour
+public class AiRobotController : BaseRobotController
 {
-    public Transform target; // O jogador que será perseguido
-    public float speed = 3f;
-    public float rotationSpeed = 100f;
-    public float gravityMultiplier = 50f;
-    public float groundStickForce = 10f;
-    public float groundCheckDistance = 0.2f;
-    public LayerMask groundLayer;
-    public Transform centerOfMass;
+    public Transform target;
 
-    private Rigidbody rb;
-    private bool isGrounded;
-
-    private void Awake()
+    protected override void MoveRobot()
     {
-        rb = GetComponent<Rigidbody>();
+        if (!isGrounded) return;
+
+        if (target == null) return;
+
+        Vector3 direction = (target.position - transform.position).normalized;
+
+        Vector3 moveForce = direction * speed;
+        rb.velocity = new Vector3(moveForce.x, rb.velocity.y, moveForce.z);
     }
 
-    private void Start()
+    protected override void RotateRobot()
     {
-        rb.centerOfMass = centerOfMass.localPosition;
-    }
+        if (!isGrounded) return;
 
-    private void FixedUpdate()
-    {
-        CheckGrounded();
+        if (target == null) return;
 
-        rb.AddForce(Physics.gravity * gravityMultiplier, ForceMode.Acceleration);
+        Vector3 direction = (target.position - transform.position).normalized;
 
-        rb.AddForce(-transform.up * groundStickForce, ForceMode.Acceleration);
-
-        if (!isGrounded) return; // Se não está no chão, não se move
-
-        // Seguir o jogador
-        if (target != null)
-        {
-            Vector3 direction = (target.position - transform.position).normalized;
-            direction.y = 0; // Mantém o movimento no plano horizontal
-
-            // Movimentação
-            Vector3 moveForce = direction * speed;
-            rb.velocity = new Vector3(moveForce.x, rb.velocity.y, moveForce.z);
-
-            // Rotação para mirar no jogador
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            rb.MoveRotation(Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime));
-        }
-    }
-
-    private void CheckGrounded()
-    {
-        // Raycast do centro do robô para baixo, verificando o chão
-        isGrounded = Physics.Raycast(transform.position, -transform.up, groundCheckDistance, groundLayer);
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        rb.MoveRotation(Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime));
     }
 }
