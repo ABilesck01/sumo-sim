@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5713471801156060783
 Transform:
   m_ObjectHideFlags: 0
@@ -502,7 +502,7 @@ GameObject:
   - component: {fileID: 1409994136961404812}
   m_Layer: 0
   m_Name: base-robot
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -547,7 +547,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
@@ -563,15 +563,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acec45556fdaff3459541037fff296df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  rotationSpeed: 250
-  gravityMultiplier: 4
-  groundStickForce: 60
+  settings: {fileID: 11400000, guid: 9ce637026f6622947abcbd7315677bae, type: 2}
+  gfx: {fileID: 759888785712866689}
   centerOfMass: {fileID: 1091366209382528874}
-  groundCheckDistance: 0.8
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  isMatchActive: 0
 --- !u!114 &1409994136961404812
 MonoBehaviour:
   m_ObjectHideFlags: 0

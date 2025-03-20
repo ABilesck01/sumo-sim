@@ -1,9 +1,19 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class RobotController : BaseRobotController
 {
     private Vector2 move;
+
+    private PlayerInput playerInput;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        playerInput = GetComponent<PlayerInput>();
+    }
 
     public void GetMoveInput(InputAction.CallbackContext callbackContext)
     {
@@ -30,5 +40,10 @@ public class RobotController : BaseRobotController
 
         float rotation = move.x * settings.rotationSpeed * Time.fixedDeltaTime;
         rb.MoveRotation(rb.rotation * Quaternion.Euler(0, rotation, 0));
+    }
+
+    private void Update()
+    {
+        Debug.Log(playerInput.devices.First().name);
     }
 }

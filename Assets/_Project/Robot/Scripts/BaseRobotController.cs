@@ -6,13 +6,14 @@ public abstract class BaseRobotController : MonoBehaviour
 {
     [Header("Robot Settings")]
     [SerializeField] protected RobotSettings settings;
+    [SerializeField] protected GameObject gfx;
     [Header("Ground Settings")]
     [SerializeField] protected Transform centerOfMass;
     [SerializeField] protected LayerMask groundLayer;
 
     protected Rigidbody rb;
     protected bool isGrounded;
-    protected bool isMatchActive = false;
+    [SerializeField] protected bool isMatchActive = false;
 
     protected virtual void Awake()
     {
@@ -59,6 +60,9 @@ public abstract class BaseRobotController : MonoBehaviour
 
     public void SetMatchActive(bool active)
     {
+        gfx.SetActive(true);
+        rb.velocity = Vector3.zero;
+        rb.isKinematic = !active;
         isMatchActive = active;
     }
 }

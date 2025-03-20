@@ -5,6 +5,16 @@ public class AiRobotController : BaseRobotController
     [Header("AI Settings")]
     public Transform target;
 
+    protected override void Start()
+    {
+        base.Start();
+
+        if (target == null)
+        {
+            target = GameObject.FindGameObjectWithTag("Player").transform;
+        }
+    }
+
     protected override void MoveRobot()
     {
         if (!isGrounded) return;
