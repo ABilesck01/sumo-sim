@@ -5,10 +5,16 @@ using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
+    [Header("Player")]
     public Transform pointA;
     public Transform pointB;
+    [Header("Materials")]
+    public Material playerAMaterial;
+    public Material playerBMaterial;
+    [Header("AI")]
     public AiRobotController aiRobotController;
     public int timerToAI = 5;
+    [Header("UI")]
     public GameObject screen;
     public TextMeshProUGUI txtMessage;
     public TextMeshProUGUI txtTimer;
@@ -22,6 +28,7 @@ public class PlayerManager : MonoBehaviour
             playerInput.transform.position = pointB.position;
             playerInput.transform.rotation = pointB.rotation;
             MatchController.instance.playerBRobot = playerInput.GetComponent<BaseRobotController>();
+            MatchController.instance.playerBRobot.SetMaterial(playerBMaterial);
             firstPlayer = false;
             StopAllCoroutines();
             StartMatch();
@@ -31,6 +38,7 @@ public class PlayerManager : MonoBehaviour
             playerInput.transform.position = pointA.position;
             playerInput.transform.rotation = pointA.rotation;
             MatchController.instance.playerARobot = playerInput.GetComponent<BaseRobotController>();
+            MatchController.instance.playerARobot.SetMaterial(playerAMaterial);
             firstPlayer = true;
 
             txtMessage.text = "Jogador 1 conectado. Aguardando jogador 2...";
@@ -43,7 +51,7 @@ public class PlayerManager : MonoBehaviour
         int currentSeconds = timerToAI;
         while (currentSeconds > 0)
         {
-            txtTimer.text = $"Jogar contra IA em {currentSeconds.ToString()}segundos...";
+            txtTimer.text = $"Jogar contra IA em {currentSeconds.ToString()} segundos...";
             yield return new WaitForSeconds(1f);
             currentSeconds--;
         }

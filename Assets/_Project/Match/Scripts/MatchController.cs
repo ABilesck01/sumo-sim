@@ -71,20 +71,20 @@ public class MatchController : MonoBehaviour
         {
             if (playerDistance > aiDistance)
             {
-                EndMatch("AI Wins!");
+                EndMatch("VERMELHO ganhou!");
             }
             else
             {
-                EndMatch("Player Wins!");
+                EndMatch("AZUL ganhou!");
             }
         }
         else if (playerDistance > arenaRadius)
         {
-            EndMatch("AI Wins!");
+            EndMatch("VERMELHO ganhou!");
         }
         else if (aiDistance > arenaRadius)
         {
-            EndMatch("Player Wins!");
+            EndMatch("AZUL ganhou!");
         }
     }
 

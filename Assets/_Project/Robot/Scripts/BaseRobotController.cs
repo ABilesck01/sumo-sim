@@ -58,6 +58,11 @@ public abstract class BaseRobotController : MonoBehaviour
         isGrounded = Physics.Raycast(transform.position, -transform.up, settings.groundCheckDistance, groundLayer);
     }
 
+    public void SetMaterial(Material material)
+    {
+        gfx.GetComponent<Renderer>().material = material;
+    }
+
     public void SetMatchActive(bool active)
     {
         gfx.SetActive(true);

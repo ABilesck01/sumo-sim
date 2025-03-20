@@ -1258,6 +1258,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointA: {fileID: 1721032317}
   pointB: {fileID: 1142343652}
+  playerAMaterial: {fileID: 2100000, guid: cbc70748a78054e429d441f48a8118bc, type: 2}
+  playerBMaterial: {fileID: 2100000, guid: 2871560311724e64598bc7bd803bd276, type: 2}
   aiRobotController: {fileID: 588181303059721821, guid: 01099bdaf45a4834e8128a9c439e77d5, type: 3}
   timerToAI: 5
   screen: {fileID: 1840667900}
